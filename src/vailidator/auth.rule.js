@@ -9,3 +9,8 @@ export const registerValidator = [
     body("phone").notEmpty().withMessage("Phone number is required").isMobilePhone('en-IN').withMessage("Invalid phone number format"),
 
 ];
+
+export const loginValidator = [
+    body("email").trim().notEmpty().withMessage('Email is required').isEmail().withMessage("Invalid email format"),
+    body("password").trim().notEmpty().withMessage("Password is required"),
+];

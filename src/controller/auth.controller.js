@@ -4,6 +4,9 @@ import bcrypt from "bcrypt";
 import ResponseBuilder from "../utils/ResponseBuilder.js";
 import UserResource from "../resource/user.resource.js";
 import { errorHandler } from "../middleware/errorHandler.js";
+import dotenv from "dotenv";
+import jwt from "jsonwebtoken";
+dotenv.config();
 
 
 
@@ -35,5 +38,35 @@ export const AuthController = {
         } catch (error) {
             errorHandler(error, req, res);
         }
-    }
+    },
+
+      login: async(req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return ResponseBuilder.error(errors.array()[0].msg, 400).build(res);
+        }
+        try{
+            const {email, password} = req.body;
+            const user = await User.findOne({ email });
+            if (!user) {
+              return res.status(404).json({ message: "User not found" });
+            }
+      
+            const isMatch = await bcrypt.compare(password, user.password);
+            if (!isMatch) {
+              return res.status(400).json({ message: "Invalid credentials" });
+            }
+
+            const token = jwt.sign(
+                { userId: user._id, email: user.email },
+                process.env.JWT_SECRET,
+                { expiresIn: "1h" }
+              );
+        
+              return ResponseBuilder.successMessage('login success', 200, { token }).build(res);
+
+        }catch(error){
+             errorHandler(error, req, res);
+        }
+    },
 };
