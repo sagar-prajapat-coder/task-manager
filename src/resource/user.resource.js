@@ -7,7 +7,7 @@ export default class UserResource {
 
   toArray() {
     return {
-      id: this.user._id,
+      _id: this.user._id,
       name: this.user.name,
       email: this.user.email,
       phone: this.user.phone,
