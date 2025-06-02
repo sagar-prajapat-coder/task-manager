@@ -5,6 +5,7 @@ import authMiddleware from "../middleware/authmiddleware.js";
 import { UserController } from "../controller/user.controller.js";
 import { taskValidator } from "../vailidator/task.rule.js";
 import { TaskController } from "../controller/task.controller.js";
+import { fileValidator } from "../middleware/fileVailidate.js";
 
 const router = Router();
 
@@ -18,6 +19,9 @@ const router = Router();
   // user routes
   router.get("/users",UserController.getUser);
 
-  // ticket routes
-  router.post("/ticket/save", taskValidator, TaskController.store);
+  // task routes
+  router.post("/task-save", taskValidator, 
+      fileValidator(['file_attachment'], 5, ['.jpg', '.jpeg', '.png', '.pdf', '.doc', '.docx']),
+
+    TaskController.store);
 export default router;  

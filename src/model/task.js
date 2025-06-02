@@ -27,7 +27,12 @@ const taskSchema = new mongoose.Schema({
     comments: {
         type: String,
         default: null
+    },
+    file_attachment: {
+        type: [], 
+        default: []
     }
+
 
 }, 
     { timestamps: true }
